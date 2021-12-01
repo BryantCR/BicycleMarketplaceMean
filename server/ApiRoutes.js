@@ -13,7 +13,10 @@ UserRouter
     .post( '/register', UserController.createUser );
 
 UserRouter
-    .get( '/landing',  UserController.loadLanding );
+    .post( '/login', UserController.userLogin );
+
+UserRouter
+    .get( '/dashboard',  UserController.loadLanding );
 
 UserRouter
     .post( '/logout', UserController.userLogout );

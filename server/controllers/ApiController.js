@@ -95,59 +95,83 @@ const UserController = {
     },
 
     loadLanding : function( request, response ){
-        if( request.session.userName === undefined ){
-            response.redirect( '/users/login' );
+        if( request.session.email === undefined ){
+            response.redirect( '/' );
         }
         else{
-            UserModel
-                .getUsers()
-                .then( data => {
-                    console.log( data );
-                    let currentUser = {
-                        firstName : request.session.firstName, 
-                        lastName : request.session.lastName,
-                        userName : request.session.userName
-                    }
-                    response.render( 'index', { users : data, currentUser } );
-                }); 
+            let userinfo = {
+            firstname : request.session.firstname,
+            lastname : request.session.lastname,
+            email : request.session.email
+        };
+        response.render( 'dashboard', {user: userinfo} );
         }
+        
     },
+
     userLogin : function( request, response ){
-        let userName = request.body.loginUserName;
-        let password = request.body.loginPassword;
+        let email = request.body.email;
+        console.log( "Result: ", email );
+        let password = request.body.user_password;
     
+        let isValid = true
+    
+        if(email === '' || password === ''){
+            request.flash('loginBlank', "There is an empty space");
+            isValid = false;
+        }
+        if(email === '' ){
+            request.flash('emailBlank', "There is an empty space");
+            isValid = false;
+        }
+        if(password === '' || password.length < 6){
+            request.flash('passwordBlank', "The password must be at least than 6 characters");
+            isValid = false;
+        }
+        if(!validateEmail(email)){
+            request.flash( 'emailBlank', 'The email field must have valid characters' );
+            isValid = false;
+        }
+    
+        if(isValid){
         UserModel
-            .getUserById( userName )
+            .getUserByEmail( email )
             .then( result => {
+                console.log( "Result", result );
                 if( result === null ){
-                    throw new Error( "That user doesn't exist!" );
+                    request.flash( 'login1', "That user doesn't exist!" );
                 }
     
                 bcrypt.compare( password, result.password )
                     .then( flag => {
                         if( !flag ){
-                            throw new Error( "Wrong credentials!" );
+                            request.flash( 'login2', "Wrong Password!" );
+                            throw new Error( "Wrong Password!" );
                         }
-                        request.session.firstName = result.firstName;
-                        request.session.lastName = result.lastName;
-                        request.session.userName = result.userName;
-    
-                        response.redirect( '/users/landing' );
+                        request.session.firstname = result.firstname;
+                        request.session.lastname = result.lastname;
+                        request.session.email = result.email;
+                        console.log(flag);
+                        response.redirect( '/dashboard' );
                     })
                     .catch( error => {
-                        request.flash( 'login', error.message );
-                        response.redirect( '/users/login' );
+                        response.redirect( '/' );
                     }); 
             })
             .catch( error => {
-                request.flash( 'login', error.message );
-                response.redirect( '/users/login' );
+                response.redirect( '/' );
             });
+        }
+        else{
+            response.redirect( '/' );
+        }
     },
+
     userLogout : function( request, response ){
         request.session.destroy();
         response.redirect( '/' ); 
     },
+
     getUserById : function( request, response ){
         let id = request.query.id;
         UserModel
@@ -162,6 +186,7 @@ const UserController = {
                 response.render( 'user', { found: false } );
             });
     },
+    
     getUserByIdParam : function( request, response ){
         let id = request.params.identifier;
     
