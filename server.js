@@ -3,20 +3,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require( 'express-session' );
 const flash = require( 'express-flash' );
+const path = require( 'path' );
+/*
 const bcrypt = require( 'bcrypt' );
 const {UserModel} = require('./models/usersModel');
 const { isValid } = require('ipaddr.js');
+*/
 
-mongoose.connect('mongodb://localhost/login_registrations_db3', {useNewUrlParser: true}); // LINK WITH THE DB
-
+require( './server/config/Database' );
 const app = express();
 
 app.set( 'views', __dirname + '/views' );
 app.set( 'view engine', 'ejs' );
-
-app.use( express.urlencoded({extended:true}) );
+//app.use(express.static(path.join(__dirname, "/client/static")));
 
 app.use( flash() );
+app.use( express.urlencoded({extended:true}) );
+app.use( express.json() );
 app.use(session({
     secret: 'secret',
     resave: false,
@@ -25,6 +28,14 @@ app.use(session({
     // You can select the time for your session 
 }));
 
+app.use( '/', UserRouter );
+
+app.listen( 8080, function(){
+    console.log( "The server is running in port 8080." );
+});
+
+
+/*
 app.get( '/', function( request, response ){
     response.render( 'logandreg' );
 });
@@ -199,7 +210,4 @@ app.post( '/logout', function( request, response ){
 });
 
 //*--------------ENDPOINTS-----------------------------------------------------------------------------------------------------------------------
-
-app.listen( 8080, function(){
-    console.log( "The server is running in port 8080." );
-});
+*/
