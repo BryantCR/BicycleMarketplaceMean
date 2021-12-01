@@ -1,5 +1,5 @@
-const {UserModel} = require('./models/ApiModel');
 const bcrypt = require( 'bcrypt' );
+const {UserModel} = require('./../models/ApiModel');
 
 function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -170,38 +170,38 @@ const UserController = {
     userLogout : function( request, response ){
         request.session.destroy();
         response.redirect( '/' ); 
-    },
-
-    getUserById : function( request, response ){
-        let id = request.query.id;
-        UserModel
-            .getUserById( id )
-            .then( result => {
-                if( result === null ){
-                    throw new Error( "That user doesn't exist" );
-                }
-                response.render( 'user', { found: true, user: result } );
-            })
-            .catch( error => {
-                response.render( 'user', { found: false } );
-            });
-    },
-    
-    getUserByIdParam : function( request, response ){
-        let id = request.params.identifier;
-    
-        UserModel
-            .getUserById( id )
-            .then( result => {
-                if( result === null ){
-                    throw new Error( "That user doesn't exist" );
-                }
-                response.render( 'user', { found: true, user: result } );
-            })
-            .catch( error => {
-                response.render( 'user', { found: false } );
-            });
     }
+
+    // getUserById : function( request, response ){
+    //     let id = request.query.id;
+    //     UserModel
+    //         .getUserById( id )
+    //         .then( result => {
+    //             if( result === null ){
+    //                 throw new Error( "That user doesn't exist" );
+    //             }
+    //             response.render( 'user', { found: true, user: result } );
+    //         })
+    //         .catch( error => {
+    //             response.render( 'user', { found: false } );
+    //         });
+    // },
+
+    // getUserByIdParam : function( request, response ){
+    //     let id = request.params.identifier;
+    
+    //     UserModel
+    //         .getUserById( id )
+    //         .then( result => {
+    //             if( result === null ){
+    //                 throw new Error( "That user doesn't exist" );
+    //             }
+    //             response.render( 'user', { found: true, user: result } );
+    //         })
+    //         .catch( error => {
+    //             response.render( 'user', { found: false } );
+    //         });
+    // }
 }
 
 
