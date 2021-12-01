@@ -9,6 +9,8 @@ const bcrypt = require( 'bcrypt' );
 const {UserModel} = require('./models/usersModel');
 const { isValid } = require('ipaddr.js');
 */
+const { UserRouter } = require("./server/routes/apiRoutes");
+app.use( '/', UserRouter );
 
 require( './server/config/Database' );
 const app = express();
@@ -27,8 +29,6 @@ app.use(session({
     cookie: { maxAge: 60000 * 30 } 
     // You can select the time for your session 
 }));
-
-app.use( '/', UserRouter );
 
 app.listen( 8080, function(){
     console.log( "The server is running in port 8080." );
