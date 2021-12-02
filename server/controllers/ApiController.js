@@ -169,7 +169,8 @@ const UserController = {
 
     userLogout : function( request, response ){
         request.session.destroy();
-        response.redirect( '/' ); 
+        response.redirect( '/' );
+        response.status(200).json({message: "Successfuly destroyed session"});
     }
 
     // getUserById : function( request, response ){

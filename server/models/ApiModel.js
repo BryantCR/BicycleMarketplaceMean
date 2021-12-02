@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose); // Auto-Increment
-
+const {ProductSchema, ProductModel} = require( './productsModel' );
 //*----------------CONSTRUCTOR-------------------------------------------------------------------------------------
 const UserSchema = new mongoose.Schema({
 
@@ -35,6 +35,7 @@ const UserSchema = new mongoose.Schema({
         minlength : 6,
     },
 
+    product : [ ProductSchema ]
 
 });
 //*----------------CONSTRUCTOR END----------------------------------------------------------------------------------

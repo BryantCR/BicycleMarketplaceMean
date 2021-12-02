@@ -21,10 +21,10 @@ UserRouter
 UserRouter
     .post( '/logout', UserController.userLogout );
 
-UserRouter
-    .get( '/getById', UserController );
+// UserRouter
+//     .get( '/getById', UserController.getUserById );
 
-UserRouter
-    .get( '/:identifier', UserController );
+// UserRouter
+//     .get( '/:identifier', UserController.getUserByIdParam );
 
 module.exports = { UserRouter };

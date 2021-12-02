@@ -1,18 +1,16 @@
-const ejs = require('ejs');
 const express = require('express');
-const mongoose = require('mongoose');
 const session = require( 'express-session' );
 const flash = require( 'express-flash' );
 const path = require( 'path' );
-/*
-const bcrypt = require( 'bcrypt' );
-const {UserModel} = require('./models/usersModel');
-const { isValid } = require('ipaddr.js');
-*/
+
 const { UserRouter } = require('./server/routes/apiRoutes');
+//const { ProductRouter } = require('./server/routes/apiRoutes');
 
+const ejs = require('ejs');
 
+// DATABASES
 require( './server/config/Database' );
+require( './server/config/productDB' );
 const app = express();
 
 app.set( 'views', __dirname + '/views' );
@@ -27,10 +25,10 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60000 * 30 } 
-    // You can select the time for your session 
 }));
 
 app.use( '/', UserRouter );
+//app.use( '/product', ProductRouter );
 
 app.listen( 8080, function(){
     console.log( "The server is running in port 8080." );
